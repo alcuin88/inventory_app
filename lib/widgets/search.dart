@@ -12,28 +12,38 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: TextField(
-          controller: _searchContoller,
-          decoration: InputDecoration(
-            hintText: "Seach...",
-            suffixIcon: IconButton(
-              onPressed: () => _searchContoller.clear(),
-              icon: const Icon(Icons.clear),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(7),
+          child: Container(
+            height: 45,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
             ),
-            prefixIcon: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search),
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+            child: TextFormField(
+              controller: _searchContoller,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.normal
+              ),
+              decoration: InputDecoration(
+                hintText: "Seach...",
+                hintStyle: const TextStyle(fontSize: 15),
+                suffixIcon: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.menu ),
+                ),
+                prefixIcon: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.search),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        )
+      ],
     );
   }
 }

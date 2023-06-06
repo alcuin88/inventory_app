@@ -39,6 +39,8 @@ dependencies:
   uuid: ^3.0.7
   firebase_core: ^2.13.1
   firebase_auth: ^4.6.2
+  flutter_riverpod: ^2.3.6
+  image_picker: ^0.8.7+5
 
 dev_dependencies:
   flutter_test:

@@ -22,13 +22,11 @@ class ItemModel {
   ItemModel({
     required this.itemName,
     required this.quantity,
-    required this.imageUrl,
     required this.category
   }) : id = uuid.v4();
 
   final String id;
   final String itemName;
   final int quantity;
-  final String imageUrl;
   final Category category;
 }
