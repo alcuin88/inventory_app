@@ -10,14 +10,6 @@ enum Category {
   tiewire,
 }
 
-const categoryTitle = {
-  Category.nails: "Nails",
-  Category.steelbar: "Steel Bar",
-  Category.plywood: "Ply Wood",
-  Category.cement: "Cement",
-  Category.tiewire: "Tie Wire",
-};
-
 class ItemModel {
   ItemModel({
     required this.itemName,

@@ -1,47 +1,62 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:inventory_app/model/item_model.dart';
 import 'package:inventory_app/provider/inventory_provider.dart';
 
-class NewItemScreen extends ConsumerWidget {
+class NewItemScreen extends ConsumerStatefulWidget {
   const NewItemScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final formkey = GlobalKey<FormState>();
+  ConsumerState<NewItemScreen> createState() => _NewItemScreenState();
+}
 
-    var itemName = "";
-    var quantity = "";
+class _NewItemScreenState extends ConsumerState<NewItemScreen> {
+  final formkey = GlobalKey<FormState>();
+  Category categoryValue = Category.values.first;
 
+  var itemName = "";
+  var quantity = "";
 
-    void saveItem() {
-      FormState formstate = formkey.currentState!;
-      if (!formstate.validate()) {
-        return;
-      }
-      formstate.save();
-
-      ref.read(inventoryProvider.notifier).addItem(ItemModel(itemName: itemName, quantity: int.parse(quantity), category: Category.nails));
-
-      Navigator.pop(context);
+  void _saveItem() {
+    FormState formstate = formkey.currentState!;
+    if (!formstate.validate()) {
+      return;
     }
+    formstate.save();
+
+    ref.read(inventoryProvider.notifier).addItem(ItemModel(
+        itemName: itemName,
+        quantity: int.parse(quantity),
+        category: categoryValue));
+
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
 
     return SizedBox(
       height: double.infinity,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(
-            left: 10,
-            right: 10,
+            left: 20,
+            right: 20,
             top: 50,
           ),
           child: Form(
             key: formkey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Add Item"),
+                Text(
+                  "Add Item",
+                  style:
+                      TextStyle(fontSize: theme.textTheme.headlineSmall!.fontSize),
+                ),
+                const SizedBox(height: 12),
                 TextFormField(
                   maxLength: 50,
                   decoration: const InputDecoration(
@@ -75,6 +90,33 @@ class NewItemScreen extends ConsumerWidget {
                   onSaved: (newValue) => quantity = newValue!,
                 ),
                 const SizedBox(height: 12),
+                SizedBox(
+                  width: 150,
+                  child: DropdownButton(
+                    isExpanded: true,
+                    value: categoryValue,
+                    icon: const Icon(Icons.menu),
+                    elevation: 16,
+                    underline: Container(
+                      height: 2,
+                      color: theme.colorScheme.primary,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        categoryValue = value!;
+                      });
+                    },
+                    items: Category.values.map<DropdownMenuItem<Category>>(
+                      (Category value) {
+                        return DropdownMenuItem<Category>(
+                          value: value,
+                          child: Text(value.name.toUpperCase()),
+                        );
+                      },
+                    ).toList(),
+                  ),
+                ),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -85,7 +127,7 @@ class NewItemScreen extends ConsumerWidget {
                       child: const Text("Reset"),
                     ),
                     ElevatedButton(
-                      onPressed: saveItem,
+                      onPressed: _saveItem,
                       child: const Text("Add Item"),
                     ),
                   ],

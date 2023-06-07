@@ -16,7 +16,7 @@ class Item extends StatelessWidget {
         color: Theme.of(context).colorScheme.onSecondary,
         shadowColor: Theme.of(context).colorScheme.onBackground,
         child: ListTile(
-          title: Text(item.itemName),
+          title: Text(item.category.name),
           subtitle: Text(item.itemName),
           trailing: Text(item.quantity.toString()),
           onTap: () {},
