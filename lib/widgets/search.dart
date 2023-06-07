@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Search extends StatefulWidget {
+class Search extends StatelessWidget {
   const Search({super.key});
 
   @override
-  State<Search> createState() => _SearchState();
-}
-
-class _SearchState extends State<Search> {
-  final _searchContoller = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
+    final searchContoller = TextEditingController();
     return Column(
       children: [
         Padding(
@@ -23,7 +17,7 @@ class _SearchState extends State<Search> {
               color: Colors.white,
             ),
             child: TextFormField(
-              controller: _searchContoller,
+              controller: searchContoller,
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.normal
