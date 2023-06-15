@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inventory_app/model/item_model.dart';
+import 'package:inventory_app/model/category.dart';
 
 import 'package:inventory_app/provider/inventory_provider.dart';
 import 'package:inventory_app/widgets/item.dart';
 
 class ListItems extends ConsumerWidget {
-  const ListItems({super.key});
+  const ListItems({super.key, required this.category});
+
+  final Category category;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final inventoryList = ref.watch(inventoryProvider);
+    final inventoryList = ref
+        .watch(inventoryProvider)
+        .where((inventory) => inventory.category == category.category).toList();
     ThemeData theme = Theme.of(context);
 
-    Future<void> showConfirmationDialog(ItemModel item) async {
+    Future<void> showConfirmationDialog(var item) async {
       final InventoryNotifier read = ref.read(inventoryProvider.notifier);
 
       return showDialog(
@@ -57,12 +61,10 @@ class ListItems extends ConsumerWidget {
                 Navigator.pop(context, "OK");
                 read.removeItem(item);
                 ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    duration: Duration(seconds: 3),
-                    content: Text("Item deleted."),
-                  )
-                );
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  duration: Duration(seconds: 3),
+                  content: Text("Item deleted."),
+                ));
               },
               child: const Text("OK"),
             )

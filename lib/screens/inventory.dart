@@ -1,14 +1,20 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:inventory_app/model/category.dart';
 
 import 'package:inventory_app/screens/new_item.dart';
 import 'package:inventory_app/widgets/list_items.dart';
-import 'package:inventory_app/widgets/main_drawer.dart';
 import 'package:inventory_app/widgets/search.dart';
 
 class InventoryScreen extends StatelessWidget {
-  const InventoryScreen({super.key});
+  const InventoryScreen({
+    super.key,
+    required this.category,
+  });
+
+  final Category category;
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +44,20 @@ class InventoryScreen extends StatelessWidget {
         backgroundColor: theme.colorScheme.background.withAlpha(200),
         elevation: 0,
         title: Text(
-          "Hardware Inventory",
-          style: TextStyle(color: theme.colorScheme.onBackground),
+          category.formattedName,
+          style: TextStyle(
+            color: theme.colorScheme.onBackground,
+            fontSize: theme.textTheme.headlineSmall!.fontSize,
+          ),
         ),
         actions: [
           IconButton(
-            onPressed: openAddItemOverlay,
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
             icon: Icon(
-              Icons.add,
-              color: theme.colorScheme.onBackground,
+              Icons.exit_to_app,
+              color: theme.colorScheme.error,
             ),
           ),
         ],
@@ -55,11 +66,23 @@ class InventoryScreen extends StatelessWidget {
           child: Search(),
         ),
       ),
-      drawer: const MainDrawer(),
       body: Column(
         mainAxisSize: MainAxisSize.max,
-        children: const [
-          ListItems(),
+        children: [
+          ListItems(
+            category: category,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: openAddItemOverlay,
+                child: const Icon(Icons.add),
+              )
+            ],
+          ),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:inventory_app/data/dummy_data.dart';
 import 'package:inventory_app/model/item_model.dart';
+import 'package:inventory_app/widgets/item_trait.dart';
 
 class Item extends StatelessWidget {
   const Item({super.key, required this.item});
@@ -9,17 +10,47 @@ class Item extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+    ThemeData theme = Theme.of(context);
+    int quantity = item.quantity;
+    Color availablityColor = Colors.green.withOpacity(0.3);
+    Icon statusIcon = const Icon(Icons.insert_chart_outlined_sharp);
+
+    if (quantity < categories[item.category.index].lowerLimit) {
+      availablityColor = Colors.red.withOpacity(0.3);
+      statusIcon = const Icon(Icons.warning_rounded);
+    } else if (quantity < categories[item.category.index].upperLimit) {
+      availablityColor = Colors.yellow.withOpacity(0.3);
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
       child: Material(
-        elevation: 5,
+        type: MaterialType.canvas,
+        elevation: 3,
         color: Theme.of(context).colorScheme.onSecondary,
         shadowColor: Theme.of(context).colorScheme.onBackground,
-        child: ListTile(
-          title: Text(item.category.name),
-          subtitle: Text(item.itemName),
-          trailing: Text(item.quantity.toString()),
-          onTap: () {},
+        child: Row(
+          children: [
+            Container(
+              height: 70,
+              width: 50,
+              color: availablityColor,
+              child: statusIcon,
+            ),
+            Expanded(
+              child: ListTile(
+                title: Text(item.itemName),
+                subtitle: Text(item.size == null ? "-" : "Size: ${item.size}"),
+                trailing: Text(
+                  "Qty: ${quantity.toString()}",
+                  style: theme.textTheme.bodyMedium,
+                ),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ItemTrait(item: item,)));
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

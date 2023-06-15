@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inventory_app/model/category.dart';
 
-import 'package:inventory_app/model/item_model.dart';
 import 'package:inventory_app/provider/inventory_provider.dart';
 
 class NewItemScreen extends ConsumerStatefulWidget {
@@ -13,7 +13,7 @@ class NewItemScreen extends ConsumerStatefulWidget {
 
 class _NewItemScreenState extends ConsumerState<NewItemScreen> {
   final formkey = GlobalKey<FormState>();
-  Category categoryValue = Category.values.first;
+  CategoryEnum categoryValue = CategoryEnum.values.first;
 
   var itemName = "";
   var quantity = "";
@@ -25,7 +25,9 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
     }
     formstate.save();
 
-    ref.read(inventoryProvider.notifier).addItem(ItemModel(
+    dynamic obj = categoryValue.name;
+
+    ref.read(inventoryProvider.notifier).addItem(obj(
         itemName: itemName,
         quantity: int.parse(quantity),
         category: categoryValue));
@@ -106,9 +108,9 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
                         categoryValue = value!;
                       });
                     },
-                    items: Category.values.map<DropdownMenuItem<Category>>(
-                      (Category value) {
-                        return DropdownMenuItem<Category>(
+                    items: CategoryEnum.values.map<DropdownMenuItem<CategoryEnum>>(
+                      (CategoryEnum value) {
+                        return DropdownMenuItem<CategoryEnum>(
                           value: value,
                           child: Text(value.name.toUpperCase()),
                         );
