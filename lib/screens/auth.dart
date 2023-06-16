@@ -128,6 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 return null;
                               },
                             ),
+                          const SizedBox(height: 12),
                           if (_isAuthenticating)
                             const CircularProgressIndicator(),
                           if (!_isAuthenticating)

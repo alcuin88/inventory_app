@@ -9,8 +9,8 @@ class InventoryNotifier extends StateNotifier<List<ItemModel>> {
     state = [item, ...state];
   }
 
-  void insertItem(ItemModel item, int index) {
-    state.insert(index, item);
+  void updateItem(ItemModel item) {
+    state[state.indexOf(item)] = item;
     state = [...state];
   }
 

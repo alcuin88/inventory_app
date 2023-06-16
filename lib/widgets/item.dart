@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_app/data/dummy_data.dart';
 import 'package:inventory_app/model/item_model.dart';
-import 'package:inventory_app/widgets/item_trait.dart';
 
 class Item extends StatelessWidget {
   const Item({super.key, required this.item});
@@ -13,13 +12,14 @@ class Item extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     int quantity = item.quantity;
     Color availablityColor = Colors.green.withOpacity(0.3);
-    Icon statusIcon = const Icon(Icons.insert_chart_outlined_sharp);
+    Icon statusIcon = const Icon(Icons.sentiment_satisfied_alt_rounded);
 
     if (quantity < categories[item.category.index].lowerLimit) {
       availablityColor = Colors.red.withOpacity(0.3);
-      statusIcon = const Icon(Icons.warning_rounded);
+      statusIcon = const Icon(Icons.sentiment_dissatisfied_rounded);
     } else if (quantity < categories[item.category.index].upperLimit) {
       availablityColor = Colors.yellow.withOpacity(0.3);
+      statusIcon = const Icon(Icons.sentiment_neutral_rounded);
     }
 
     return Container(
@@ -45,9 +45,6 @@ class Item extends StatelessWidget {
                   "Qty: ${quantity.toString()}",
                   style: theme.textTheme.bodyMedium,
                 ),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ItemTrait(item: item,)));
-                },
               ),
             ),
           ],

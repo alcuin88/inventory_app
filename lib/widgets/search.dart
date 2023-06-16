@@ -23,7 +23,7 @@ class Search extends StatelessWidget {
                 fontWeight: FontWeight.normal
               ),
               decoration: InputDecoration(
-                hintText: "Seach...",
+                hintText: "Search...",
                 hintStyle: const TextStyle(fontSize: 15),
                 suffixIcon: IconButton(
                   onPressed: () {},

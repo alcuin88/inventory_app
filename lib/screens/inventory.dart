@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_app/model/category.dart';
+import 'package:inventory_app/model/item_model.dart';
 
 import 'package:inventory_app/screens/new_item.dart';
 import 'package:inventory_app/widgets/list_items.dart';
@@ -20,12 +21,12 @@ class InventoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    void openAddItemOverlay() {
+    void openAddItemOverlay(Category category) {
       showModalBottomSheet(
         useSafeArea: true,
         isScrollControlled: true,
         context: context,
-        builder: (context) => const NewItemScreen(),
+        builder: (context) => NewItemScreen(category: category,),
       );
     }
 
@@ -78,7 +79,9 @@ class InventoryScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: openAddItemOverlay,
+                onPressed: () {
+                  openAddItemOverlay(category);
+                },
                 child: const Icon(Icons.add),
               )
             ],

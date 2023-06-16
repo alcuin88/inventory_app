@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventory_app/model/category.dart';
+import 'package:inventory_app/model/item_model.dart';
 
 import 'package:inventory_app/provider/inventory_provider.dart';
 
 class NewItemScreen extends ConsumerStatefulWidget {
-  const NewItemScreen({super.key});
+  const NewItemScreen({super.key, required this.category});
+
+  final Category category;
 
   @override
   ConsumerState<NewItemScreen> createState() => _NewItemScreenState();
@@ -13,10 +16,10 @@ class NewItemScreen extends ConsumerStatefulWidget {
 
 class _NewItemScreenState extends ConsumerState<NewItemScreen> {
   final formkey = GlobalKey<FormState>();
-  CategoryEnum categoryValue = CategoryEnum.values.first;
 
-  var itemName = "";
-  var quantity = "";
+  String itemName = "";
+  String? size;
+  int quantity = 0;
 
   void _saveItem() {
     FormState formstate = formkey.currentState!;
@@ -25,12 +28,11 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
     }
     formstate.save();
 
-    dynamic obj = categoryValue.name;
-
-    ref.read(inventoryProvider.notifier).addItem(obj(
+    ref.read(inventoryProvider.notifier).addItem(ItemModel(
         itemName: itemName,
-        quantity: int.parse(quantity),
-        category: categoryValue));
+        quantity: quantity,
+        size: size,
+        category: widget.category.category));
 
     Navigator.pop(context);
   }
@@ -54,7 +56,7 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Add Item",
+                  "Add Item to ${widget.category.formattedName}",
                   style:
                       TextStyle(fontSize: theme.textTheme.headlineSmall!.fontSize),
                 ),
@@ -76,6 +78,21 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
                   onSaved: (newValue) => itemName = newValue!,
                 ),
                 TextFormField(
+                  maxLength: 50,
+                  decoration: const InputDecoration(
+                    label: Text("Item size"),
+                  ),
+                  validator: (value) {
+                    if ((value != null ||
+                        value!.isNotEmpty) &&
+                        value.trim().length > 50) {
+                      return "Must be between 1 and 50 characters";
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) => size = newValue,
+                ),
+                TextFormField(
                   decoration: const InputDecoration(
                     label: Text("Quantity"),
                   ),
@@ -89,34 +106,7 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
                     }
                     return null;
                   },
-                  onSaved: (newValue) => quantity = newValue!,
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: 150,
-                  child: DropdownButton(
-                    isExpanded: true,
-                    value: categoryValue,
-                    icon: const Icon(Icons.menu),
-                    elevation: 16,
-                    underline: Container(
-                      height: 2,
-                      color: theme.colorScheme.primary,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        categoryValue = value!;
-                      });
-                    },
-                    items: CategoryEnum.values.map<DropdownMenuItem<CategoryEnum>>(
-                      (CategoryEnum value) {
-                        return DropdownMenuItem<CategoryEnum>(
-                          value: value,
-                          child: Text(value.name.toUpperCase()),
-                        );
-                      },
-                    ).toList(),
-                  ),
+                  onSaved: (newValue) => quantity = int.parse(newValue!),
                 ),
                 const SizedBox(height: 12),
                 Row(

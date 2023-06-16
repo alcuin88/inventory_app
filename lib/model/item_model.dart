@@ -13,6 +13,6 @@ class ItemModel {
   final String id;
   final String itemName;
   final String? size;
-  final int quantity;
+  int quantity;
   final CategoryEnum category;
 }
