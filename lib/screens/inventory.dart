@@ -2,14 +2,18 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:draggable_fab/draggable_fab.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:inventory_app/model/category.dart';
 import 'package:inventory_app/model/item_model.dart';
-
+import 'package:inventory_app/provider/inventory_provider.dart';
 import 'package:inventory_app/screens/new_item.dart';
 import 'package:inventory_app/widgets/list_items.dart';
 import 'package:inventory_app/widgets/search.dart';
 
-class InventoryScreen extends StatelessWidget {
+class InventoryScreen extends ConsumerStatefulWidget {
   const InventoryScreen({
     super.key,
     required this.category,
@@ -18,16 +22,58 @@ class InventoryScreen extends StatelessWidget {
   final Category category;
 
   @override
+  ConsumerState<InventoryScreen> createState() => _InventoryScreenState();
+}
+
+class _InventoryScreenState extends ConsumerState<InventoryScreen> {
+  String searchItem = "";
+  List<String> filter = [];
+  late final List<ItemModel> inventoryList;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final List<ItemModel> inventoryList =
+        ref.watch(inventoryProvider).where((inventory) {
+      if (inventory.category != widget.category.category) {
+        return false;
+      }
+
+      if (searchItem != "" || searchItem.isNotEmpty) {
+        return inventory.itemName
+            .toUpperCase()
+            .contains(searchItem.toUpperCase());
+      }
+
+      if(filter.isNotEmpty) {
+        return filter.contains(inventory.size);
+      }
+
+      return true;
+    }).toList();
 
     void openAddItemOverlay(Category category) {
       showModalBottomSheet(
         useSafeArea: true,
         isScrollControlled: true,
         context: context,
-        builder: (context) => NewItemScreen(category: category,),
+        builder: (context) => NewItemScreen(
+          category: category,
+        ),
       );
+    }
+
+    void onSelectedFilter(List<String> selectedFilter) {
+      setState(() {
+        filter = selectedFilter;
+      });
     }
 
     return Scaffold(
@@ -43,9 +89,10 @@ class InventoryScreen extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: theme.colorScheme.background.withAlpha(200),
+        foregroundColor: theme.colorScheme.onBackground,
         elevation: 0,
         title: Text(
-          category.formattedName,
+          widget.category.formattedName,
           style: TextStyle(
             color: theme.colorScheme.onBackground,
             fontSize: theme.textTheme.headlineSmall!.fontSize,
@@ -62,31 +109,41 @@ class InventoryScreen extends StatelessWidget {
             ),
           ),
         ],
-        bottom: const PreferredSize(
-          preferredSize: Size(3, 50),
-          child: Search(),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: Search(
+            onChanged: (search) => setState(() {
+              searchItem = search;
+            }),
+            onSelectedFilter: onSelectedFilter,
+            inventoryList: inventoryList,
+            filterList: filter,
+          ),
         ),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           ListItems(
-            category: category,
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  openAddItemOverlay(category);
-                },
-                child: const Icon(Icons.add),
-              )
-            ],
+            inventoryList: inventoryList,
           ),
         ],
+      ),
+      floatingActionButton: DraggableFab(
+        child: FloatingActionButton(
+          elevation: 5,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
+            ),
+          ),
+          backgroundColor: theme.colorScheme.tertiaryContainer,
+          foregroundColor: theme.colorScheme.onTertiaryContainer,
+          onPressed: () {
+            openAddItemOverlay(widget.category);
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

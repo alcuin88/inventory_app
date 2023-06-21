@@ -27,7 +27,7 @@ class Item extends StatelessWidget {
       child: Material(
         type: MaterialType.canvas,
         elevation: 3,
-        color: Theme.of(context).colorScheme.onSecondary,
+        color: Theme.of(context).colorScheme.background,
         shadowColor: Theme.of(context).colorScheme.onBackground,
         child: Row(
           children: [

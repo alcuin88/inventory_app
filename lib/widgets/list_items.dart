@@ -2,32 +2,21 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inventory_app/model/category.dart';
 import 'package:inventory_app/model/item_model.dart';
 
 import 'package:inventory_app/provider/inventory_provider.dart';
 import 'package:inventory_app/widgets/item.dart';
 
-class ListItems extends ConsumerStatefulWidget {
-  const ListItems({super.key, required this.category});
+class ListItems extends ConsumerWidget {
+  const ListItems(
+      {super.key, required this.inventoryList});
 
-  final Category category;
-
-  @override
-  ConsumerState<ListItems> createState() => _ListItemsState();
-}
-
-class _ListItemsState extends ConsumerState<ListItems> {
-  late int quantity;
+  final List<ItemModel> inventoryList;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     ThemeData theme = Theme.of(context);
-
-    final List<ItemModel> inventoryList = ref
-        .watch(inventoryProvider)
-        .where((inventory) => inventory.category == widget.category.category)
-        .toList();
+    late int quantity;
 
     Future<void> showConfirmationDialog(ItemModel item) async {
       final InventoryNotifier read = ref.read(inventoryProvider.notifier);
