@@ -46,15 +46,18 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
         return false;
       }
 
-      if (searchItem != "" || searchItem.isNotEmpty) {
-        return inventory.itemName
+      if (!inventory.itemName
             .toUpperCase()
-            .contains(searchItem.toUpperCase());
+            .contains(searchItem.toUpperCase())) {
+        return false;
       }
 
       if(filter.isNotEmpty) {
-        return filter.contains(inventory.size);
+        if(filter.where((element) => element.toString() == inventory.size).isEmpty) {
+        return false;
       }
+      }
+      
 
       return true;
     }).toList();
@@ -70,9 +73,10 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
       );
     }
 
-    void onSelectedFilter(List<String> selectedFilter) {
+    void onSelectedFilter(List<String> selectedFilter, String search) {
       setState(() {
         filter = selectedFilter;
+        searchItem = search;
       });
     }
 
@@ -112,9 +116,6 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: Search(
-            onChanged: (search) => setState(() {
-              searchItem = search;
-            }),
             onSelectedFilter: onSelectedFilter,
             inventoryList: inventoryList,
             filterList: filter,

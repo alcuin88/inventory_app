@@ -5,14 +5,12 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 class Search extends StatefulWidget {
   const Search({
     super.key,
-    required this.onChanged,
     required this.onSelectedFilter,
     required this.inventoryList,
     required this.filterList,
   });
 
-  final void Function(String) onChanged;
-  final void Function(List<String>) onSelectedFilter;
+  final void Function(List<String>, String) onSelectedFilter;
   final List<ItemModel> inventoryList;
   final List<String> filterList;
 
@@ -24,6 +22,13 @@ class _SearchState extends State<Search> {
   var seen = <String>{};
   late final List<ItemModel> filterItems;
 
+  List<String> filter = [];
+  String search = "";
+
+  void _setFilters() {
+    widget.onSelectedFilter(filter, search);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +37,7 @@ class _SearchState extends State<Search> {
           (item) => seen.add(item.size!),
         )
         .toList();
+    filter = widget.filterList;
   }
 
   void _showMultiSelect(BuildContext context) async {
@@ -39,13 +45,19 @@ class _SearchState extends State<Search> {
       context: context,
       builder: (ctx) {
         return MultiSelectDialog(
+          title: const Text("Filters"),
           onConfirm: (val) {
-            widget.onSelectedFilter(val.map((e) => e).toList());
+            filter = val.map((e) => e).toList();
+            _setFilters();
           },
           listType: MultiSelectListType.CHIP,
           items: filterItems
-              .map((value) =>
-                  MultiSelectItem(value.size.toString(), value.size.toString()))
+              .map(
+                (value) => MultiSelectItem(
+                  value.size.toString(),
+                  value.size.toString(),
+                ),
+              )
               .toList(),
           initialValue: widget.filterList,
         );
@@ -80,7 +92,10 @@ class _SearchState extends State<Search> {
                   onPressed: () => _showMultiSelect(context),
                 ),
               ),
-              onChanged: (value) => widget.onChanged(value),
+              onChanged: (value) {
+                search = value;
+                _setFilters();
+              },
             ),
           ),
         )
