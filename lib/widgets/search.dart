@@ -32,11 +32,14 @@ class _SearchState extends State<Search> {
   @override
   void initState() {
     super.initState();
-    filterItems = widget.inventoryList
-        .where(
-          (item) => seen.add(item.size!),
-        )
-        .toList();
+    filterItems = widget.inventoryList.where(
+      (item) {
+        if (item.size != null) {
+          return seen.add(item.size!);
+        }
+        return false;
+      },
+    ).toList();
     filter = widget.filterList;
   }
 
@@ -89,7 +92,8 @@ class _SearchState extends State<Search> {
                 ),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.filter_list),
-                  onPressed: () => _showMultiSelect(context),
+                  onPressed: () =>
+                      filterItems.isEmpty ? null : _showMultiSelect(context),
                 ),
               ),
               onChanged: (value) {

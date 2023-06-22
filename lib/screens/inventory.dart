@@ -46,9 +46,11 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
         return false;
       }
 
+
+      
       if (!inventory.itemName
             .toUpperCase()
-            .contains(searchItem.toUpperCase())) {
+            .startsWith(searchItem.toUpperCase())) {
         return false;
       }
 
