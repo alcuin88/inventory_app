@@ -3,7 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:inventory_app/api_key.dart';
+import 'package:inventory_app/secret.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -52,18 +52,18 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: webAPIKey,
-    appId: '1:825129965969:web:7399cf42ddf74d3b8ba230',
-    messagingSenderId: '825129965969',
-    projectId: 'inventory-app-79b05',
-    authDomain: 'inventory-app-79b05.firebaseapp.com',
-    storageBucket: 'inventory-app-79b05.appspot.com',
+    appId: webAppId,
+    messagingSenderId: webMessagingSenderId,
+    projectId: webProjectId,
+    authDomain: webAuthDomain,
+    storageBucket: webStorageBucket,
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: androidAPIKey,
-    appId: '1:825129965969:android:0c53a3fe46cf95dc8ba230',
-    messagingSenderId: '825129965969',
-    projectId: 'inventory-app-79b05',
-    storageBucket: 'inventory-app-79b05.appspot.com',
+    appId: androidAppId,
+    messagingSenderId: androidMessagingSenderId,
+    projectId: androidProjectId,
+    storageBucket: androidStorageBucket,
   );
 }
