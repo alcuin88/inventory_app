@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inventory_app/provider/inventory_provider.dart';
 import 'package:inventory_app/screens/categories.dart';
 
 import 'package:inventory_app/screens/splash.dart';
@@ -73,7 +72,6 @@ class MyApp extends ConsumerWidget {
           }
 
           if (snapshot.hasData) {
-            // ref.read(inventoryProvider.notifier).loadInventory();
             return const CategoriesScreen();
           }
           return const AuthScreen();

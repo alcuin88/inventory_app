@@ -1,6 +1,4 @@
 import 'package:inventory_app/model/category.dart';
-import 'package:inventory_app/model/item_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 const categories = [
   Category(
