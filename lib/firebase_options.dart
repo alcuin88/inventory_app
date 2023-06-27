@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:inventory_app/api_key.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -50,7 +51,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBGZ7mS62ud4EFY94j13n9TpZ-vY5YUtnM',
+    apiKey: webAPIKey,
     appId: '1:825129965969:web:7399cf42ddf74d3b8ba230',
     messagingSenderId: '825129965969',
     projectId: 'inventory-app-79b05',
@@ -59,7 +60,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDztsBrClmi7n33XQMplxQ0-cgm8L7ozMw',
+    apiKey: androidAPIKey,
     appId: '1:825129965969:android:0c53a3fe46cf95dc8ba230',
     messagingSenderId: '825129965969',
     projectId: 'inventory-app-79b05',
