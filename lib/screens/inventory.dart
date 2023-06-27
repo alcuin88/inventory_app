@@ -28,13 +28,6 @@ class InventoryScreen extends ConsumerStatefulWidget {
 class _InventoryScreenState extends ConsumerState<InventoryScreen> {
   String searchItem = "";
   List<String> filter = [];
-  late final List<ItemModel> inventoryList;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,24 +35,23 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
 
     final List<ItemModel> inventoryList =
         ref.watch(inventoryProvider).where((inventory) {
-      if (inventory.category != widget.category.category) {
+      if (inventory.category != widget.category) {
         return false;
       }
 
-
-      
       if (!inventory.itemName
-            .toUpperCase()
-            .startsWith(searchItem.toUpperCase())) {
+          .toUpperCase()
+          .startsWith(searchItem.toUpperCase())) {
         return false;
       }
 
-      if(filter.isNotEmpty) {
-        if(filter.where((element) => element.toString() == inventory.size).isEmpty) {
-        return false;
+      if (filter.isNotEmpty) {
+        if (filter
+            .where((element) => element.toString() == inventory.size)
+            .isEmpty) {
+          return false;
+        }
       }
-      }
-      
 
       return true;
     }).toList();
@@ -107,7 +99,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              FirebaseAuth.instance.signOut();
+              FirebaseAuth.instance.signOut().then((value) => Navigator.pop(context));
             },
             icon: Icon(
               Icons.exit_to_app,

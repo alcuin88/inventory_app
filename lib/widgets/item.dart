@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:inventory_app/data/dummy_data.dart';
 import 'package:inventory_app/model/item_model.dart';
 
 class Item extends StatelessWidget {
@@ -14,10 +13,10 @@ class Item extends StatelessWidget {
     Color availablityColor = Colors.green.withOpacity(0.3);
     Icon statusIcon = const Icon(Icons.sentiment_satisfied_alt_rounded);
 
-    if (quantity < categories[item.category.index].lowerLimit) {
+    if (quantity < item.category.lowerLimit) {
       availablityColor = Colors.red.withOpacity(0.3);
       statusIcon = const Icon(Icons.sentiment_dissatisfied_rounded);
-    } else if (quantity < categories[item.category.index].upperLimit) {
+    } else if (quantity < item.category.upperLimit) {
       availablityColor = Colors.yellow.withOpacity(0.3);
       statusIcon = const Icon(Icons.sentiment_neutral_rounded);
     }

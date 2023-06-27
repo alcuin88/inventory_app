@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventory_app/model/item_model.dart';
@@ -8,8 +10,7 @@ import 'package:inventory_app/provider/inventory_provider.dart';
 import 'package:inventory_app/widgets/item.dart';
 
 class ListItems extends ConsumerWidget {
-  const ListItems(
-      {super.key, required this.inventoryList});
+  const ListItems({super.key, required this.inventoryList});
 
   final List<ItemModel> inventoryList;
 
@@ -174,6 +175,57 @@ class ListItems extends ConsumerWidget {
         },
       );
     }
+
+    // if (inventoryList.isNotEmpty) {
+    //   content = StreamBuilder(
+    //     stream: FirebaseFirestore.instance
+    //         .collection("inventory")
+    //         .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+    //         .orderBy("itemName", descending: true)
+    //         .snapshots(),
+    //     builder: (context, snapshots) {
+    //       if (snapshots.connectionState == ConnectionState.waiting) {
+    //         return const Center(
+    //           child: CircularProgressIndicator(),
+    //         );
+    //       }
+
+    //       if (!snapshots.hasData || snapshots.data!.docs.isEmpty) {
+    //         return const Center(
+    //           child: Text("No data found."),
+    //         );
+    //       }
+
+    //       if (snapshots.hasError) {
+    //         return const Center(
+    //           child: Text("Something went wrong..."),
+    //         );
+    //       }
+
+    //       final loadedData = snapshots.data!.docs;
+
+    //       return content = ListView.builder(
+    //         itemCount: loadedData.length,
+    //         itemBuilder: (context, index) {
+    //           final inventory = loadedData[index].data();
+    //           ItemModel itemModel = ItemModel(
+    //             itemName: inventory["itemName"],
+    //             quantity: inventory["quantity"],
+    //             category: inventory["category"],
+    //             size: inventory["size"],
+    //           );
+    //           return GestureDetector(
+    //             key: ValueKey(loadedData[index]),
+    //             onLongPress: () => showConfirmationDialog(itemModel),
+    //             child: Item(
+    //               item: inventoryList[index],
+    //             ),
+    //           );
+    //         },
+    //       );
+    //     },
+    //   );
+    // }
 
     return Expanded(
       child: content,

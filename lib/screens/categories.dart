@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:inventory_app/data/dummy_data.dart';
 import 'package:inventory_app/model/category.dart';
+import 'package:inventory_app/provider/inventory_provider.dart';
 import 'package:inventory_app/screens/inventory.dart';
 import 'package:inventory_app/widgets/category_grid_item.dart';
 
@@ -19,6 +20,8 @@ class CategoriesScreen extends ConsumerStatefulWidget {
 class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
+  late bool logout;
+  
 
   @override
   void initState() {
@@ -30,6 +33,18 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       upperBound: 1,
     );
     _animationController.forward();
+    ref.read(inventoryProvider.notifier).loadInventory();
+  }
+
+  void _selectCategory(BuildContext context, Category category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InventoryScreen(
+          category: category,
+        ),
+      ),
+    );
   }
 
   @override
@@ -38,19 +53,10 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     super.dispose();
   }
 
-  void _selectCategory(BuildContext context, Category category) {
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => InventoryScreen(category: category,),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -87,20 +93,18 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
       ),
       body: AnimatedBuilder(
         animation: _animationController,
-        child: GridView(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+        child: GridView.builder(
+          itemCount: categories.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: width > 600 ? 4 : 2,
             childAspectRatio: 3 / 2,
           ),
-          children: [
-            for (final category in categories)
-              CateforyGridItem(
-                category: category,
-                onSelectCategory: () {
-                  _selectCategory(context, category);
-                },
-              ),
-          ],
+          itemBuilder: (context, index) => CategoryGridItem(
+            category: categories[index],
+            onSelectCategory: () {
+              _selectCategory(context, categories[index]);
+            },
+          ),
         ),
         builder: (context, child) => SlideTransition(
           position: Tween(

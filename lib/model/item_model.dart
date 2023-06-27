@@ -10,9 +10,10 @@ class ItemModel {
     required this.quantity,
     required this.category,
   }) : id = uuid.v4();
+
   final String id;
   final String itemName;
   final String? size;
   int quantity;
-  final CategoryEnum category;
+  final Category category;
 }

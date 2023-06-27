@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:inventory_app/model/category.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class CateforyGridItem extends StatelessWidget {
-  const CateforyGridItem({
+class CategoryGridItem extends StatelessWidget {
+  const CategoryGridItem({
     super.key,
     required this.category,
     required this.onSelectCategory,
@@ -46,7 +46,7 @@ class CateforyGridItem extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                   child: Text(
-                    category.category.name.toUpperCase(),
+                    category.category.toUpperCase(),
                     maxLines: 2,
                     textAlign: TextAlign.center,
                     softWrap: true,

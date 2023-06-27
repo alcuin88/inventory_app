@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inventory_app/provider/inventory_provider.dart';
 import 'package:inventory_app/screens/categories.dart';
 
 import 'package:inventory_app/screens/splash.dart';
@@ -26,12 +27,12 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Inventory',
       darkTheme: ThemeData.dark().copyWith(
@@ -72,9 +73,9 @@ class MyApp extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
+            // ref.read(inventoryProvider.notifier).loadInventory();
             return const CategoriesScreen();
           }
-
           return const AuthScreen();
         },
       ),

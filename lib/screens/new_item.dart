@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inventory_app/model/category.dart';
@@ -32,7 +33,7 @@ class _NewItemScreenState extends ConsumerState<NewItemScreen> {
         itemName: itemName,
         quantity: quantity,
         size: size,
-        category: widget.category.category));
+        category: widget.category));
 
     Navigator.pop(context);
   }
